@@ -13,7 +13,11 @@ import numpy as np
 def pivoting(df, row, column, values):
     """
     Pivoting function helps to look at data in shape that user want.
-    
+    arguments:
+        df -> dataframe
+        row -> which column must be row in pivot
+        column -> which column must be column in pivot
+        values -> variable that must fill pivot    
     """
     data = df[[row, column,  values]].to_numpy()
     rows, row_pos = np.unique(data[:, 0], return_inverse=True)
@@ -29,9 +33,14 @@ def pivoting(df, row, column, values):
 # In[6]:
 
 
-def pivvottable(df, row, column, value):
+def pivvottable(df, row, column, value, function = 'median'):
     """
-    pivvottable create pivot table and make summary grouped by row and column 
+    pivvottable create pivot table and make summary grouped by row and column
+        df -> dataframe
+        row -> which column must be row in pivot
+        column -> which column must be column in pivot
+        values -> variable that must fill pivot   
+        function -> how to summarise data
     """
     data = df[[row, column, value]].to_numpy()
     rows, row_pos = np.unique(data[:, 0], return_inverse = True)
@@ -43,8 +52,19 @@ def pivvottable(df, row, column, value):
         for j in range(len(cols)):
             b = a.copy()
             b = b[b[column] == cols[j]]
-            c = b[value].mean()
-            new_list.append(c)
+            if function == 'mean':
+                c = b[value].mean()
+            elif function == 'min':
+                c = b[value].min()
+            elif function == 'max':
+                c = b[value].max()
+            elif function == 'median':
+                c = b[value].median()
+            elif function == 'standard deviation':
+                c = b[value].std()
+            else:
+                print("Please enter 'min' or 'max' or 'mean' or 'median' or 'standard deviation'")
+            new_list.append(c)                  
     pivottable = np.array(new_list).reshape(len(rows), len(cols))
     return pivottable
 
